@@ -28,7 +28,7 @@ const RegisterPage: React.FC = () => {
             Enter your credentials to create your account
           </p>
         </div>
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleLogin}>
           <div>
             <label className="block text-sm font-medium text-[#101928]">
               Email Address
