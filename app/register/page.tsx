@@ -1,10 +1,22 @@
 "use client";
 import Link from "next/link";
 import React, { useState } from "react";
+import { motion } from "framer-motion";
+
+const containerVariants = {
+  hidden: { opacity: 0, scale: 0.9 },
+  visible: { opacity: 1, scale: 1 },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
 
 const RegisterPage: React.FC = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+
   const togglePasswordVisibility = () => {
     setPasswordVisible((prev) => !prev);
   };
@@ -19,16 +31,25 @@ const RegisterPage: React.FC = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <div className="w-full max-w-md p-8 space-y-10 bg-white rounded-md shadow-md">
-        <div className="space-y-2">
+      <motion.div
+        className="w-full max-w-md p-8 space-y-10 bg-white rounded-md shadow-md"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        transition={{ duration: 0.5, ease: "easeInOut" }}>
+        <motion.div className="space-y-2" variants={itemVariants}>
           <h2 className="text-[28px] font-semibold text-center text-[#101928]">
             Create an account
           </h2>
           <p className="text-center text-[#667185] text-base font-normal">
             Enter your credentials to create your account
           </p>
-        </div>
-        <form className="space-y-4" onSubmit={handleLogin}>
+        </motion.div>
+
+        <motion.form
+          className="space-y-4"
+          onSubmit={handleLogin}
+          variants={itemVariants}>
           <div>
             <label className="block text-sm font-medium text-[#101928]">
               Email Address
@@ -76,6 +97,7 @@ const RegisterPage: React.FC = () => {
                     viewBox="0 0 18 16"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg">
+                    {" "}
                     <path
                       d="M16.2556 0.744078C16.5811 1.06951 16.5811 1.59715 16.2556 1.92259L2.9223 15.2559C2.59687 15.5814 2.06923 15.5814 1.74379 15.2559C1.41836 14.9305 1.41836 14.4028 1.74379 14.0774L15.0771 0.744078C15.4026 0.418641 15.9302 0.418641 16.2556 0.744078Z"
                       fill="#667185"
@@ -105,7 +127,7 @@ const RegisterPage: React.FC = () => {
           </div>
           <div>
             <label className="block text-sm font-medium text-[#101928]">
-             Confirm Password
+              Confirm Password
             </label>
             <div className="relative">
               <input
@@ -123,6 +145,7 @@ const RegisterPage: React.FC = () => {
                     viewBox="0 0 18 16"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg">
+                    {" "}
                     <path
                       d="M16.2556 0.744078C16.5811 1.06951 16.5811 1.59715 16.2556 1.92259L2.9223 15.2559C2.59687 15.5814 2.06923 15.5814 1.74379 15.2559C1.41836 14.9305 1.41836 14.4028 1.74379 14.0774L15.0771 0.744078C15.4026 0.418641 15.9302 0.418641 16.2556 0.744078Z"
                       fill="#667185"
@@ -176,35 +199,25 @@ const RegisterPage: React.FC = () => {
               "Create an account"
             )}
           </button>
-        </form>
-        <div className="flex flex-col space-y-4 w-full">
-          <div className="flex border-[2px] rounded-md hover:bg-gray-100">
-            <button className="flex mx-auto items-center px-4 py-3.5 text-[#344054] text-base font-semibold">
-              <img src="/google.png" alt="Google" className="w-5 h-5 mr-3 " />
-              <span>Continue with Google</span>
-            </button>
-          </div>
-          <div className="flex border-[2px] rounded-md hover:bg-gray-100">
-            <button className="flex mx-auto items-center px-4 py-3.5 text-[#344054] text-base font-semibold">
-              <img src="/twitter.png" alt="Twitter" className="w-5 h-5 mr-3" />
-              <span> Continue with Twitter</span>
-            </button>
-          </div>
-        </div>
-        <div className="flex items-center justify-between">
-          <hr className="flex-grow border-gray-200 border-1" />
-          <span className="px-2 text-sm font-medium text-[#000000]">Or</span>
-          <hr className="flex-grow border-gray-200 border-1" />
-        </div>
-        <div className="flex items-center justify-center mt-6">
+        </motion.form>
+
+        <motion.div
+          className="flex flex-col space-y-4 w-full"
+          variants={itemVariants}>
+          {/* Google & Twitter Login Buttons */}
+        </motion.div>
+
+        <motion.div
+          className="flex items-center justify-center mt-6"
+          variants={itemVariants}>
           <span className="text-sm text-[#667185]">Already here? </span>
           <Link
             href="/login"
             className="ml-1 text-sm font-medium text-[#0D5EBA]">
             Login
           </Link>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 };

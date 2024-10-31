@@ -1,10 +1,13 @@
+
 "use client";
 import Link from "next/link";
 import React, { useState } from "react";
+import { motion } from "framer-motion";
 
 const LoginPage: React.FC = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+
   const togglePasswordVisibility = () => {
     setPasswordVisible((prev) => !prev);
   };
@@ -17,9 +20,28 @@ const LoginPage: React.FC = () => {
     }, 2000);
   };
 
+  // Animation Variants
+  const containerVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  };
+
+  const buttonVariants = {
+    rest: { scale: 1 },
+    hover: { scale: 1.05 },
+  };
+
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <div className="w-full max-w-md p-8 space-y-10 bg-white rounded-md shadow-md">
+    <motion.div
+      className="flex items-center justify-center min-h-screen bg-gray-50"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}>
+      <motion.div
+        className="w-full max-w-md p-8 space-y-10 bg-white rounded-md shadow-md"
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}>
         <div className="space-y-2">
           <h2 className="text-[28px] font-semibold text-center text-[#101928]">
             Log In
@@ -28,13 +50,13 @@ const LoginPage: React.FC = () => {
             Enter your credentials to access your account
           </p>
         </div>
-        <form className="space-y-8 " onSubmit={handleLogin}>
+        <form className="space-y-8" onSubmit={handleLogin}>
           <div>
             <label className="block text-sm font-medium text-[#101928]">
               Email Address
             </label>
             <div className="relative">
-              <input
+            <input
                 type="email"
                 placeholder="Enter Email"
                 className="w-full px-4 py-2 border text-black rounded-md focus:ring focus:ring-blue-200 placeholder:text-[#98A2B3] placeholder:text-sm placeholder:font-normal"
@@ -61,7 +83,7 @@ const LoginPage: React.FC = () => {
               Password
             </label>
             <div className="relative">
-              <input
+            <input
                 type={passwordVisible ? "text" : "password"}
                 placeholder="Enter Password"
                 className="w-full px-4 py-2 border text-black rounded-md focus:ring focus:ring-blue-200 placeholder:text-[#98A2B3] placeholder:text-sm placeholder:font-normal"
@@ -76,6 +98,7 @@ const LoginPage: React.FC = () => {
                     viewBox="0 0 18 16"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg">
+                    {" "}
                     <path
                       d="M16.2556 0.744078C16.5811 1.06951 16.5811 1.59715 16.2556 1.92259L2.9223 15.2559C2.59687 15.5814 2.06923 15.5814 1.74379 15.2559C1.41836 14.9305 1.41836 14.4028 1.74379 14.0774L15.0771 0.744078C15.4026 0.418641 15.9302 0.418641 16.2556 0.744078Z"
                       fill="#667185"
@@ -117,11 +140,13 @@ const LoginPage: React.FC = () => {
               Forgot Password?
             </a>
           </div>
-          <button
+          <motion.button
             type="submit"
             className="w-full py-3.5 flex items-center justify-center text-white bg-[#0D5EBA] rounded-md hover:bg-blue-700 text-base font-semibold"
-            disabled={loading} 
-          >
+            disabled={loading}
+            variants={buttonVariants}
+            initial="rest"
+            whileHover="hover">
             {loading ? (
               <svg
                 className="w-5 h-5 mr-2 text-white animate-spin"
@@ -143,9 +168,8 @@ const LoginPage: React.FC = () => {
             ) : (
               "Log into Account"
             )}
-          </button>
+          </motion.button>
         </form>
-
         <div className="flex items-center justify-between">
           <hr className="flex-grow border-gray-200 border-1" />
           <span className="px-2 text-sm font-medium text-[#000000]">Or</span>
@@ -154,7 +178,7 @@ const LoginPage: React.FC = () => {
         <div className="flex flex-col space-y-4 w-full">
           <div className="flex border-[2px] rounded-md hover:bg-gray-100">
             <button className="flex mx-auto items-center px-4 py-3.5 text-[#344054] text-base font-semibold">
-              <img src="/google.png" alt="Google" className="w-5 h-5 mr-3 " />
+              <img src="/google.png" alt="Google" className="w-5 h-5 mr-3" />
               <span>Continue with Google</span>
             </button>
           </div>
@@ -167,14 +191,12 @@ const LoginPage: React.FC = () => {
         </div>
         <div className="flex items-center justify-center mt-6">
           <span className="text-sm text-[#667185]">Are you new here? </span>
-          <Link
-            href="/register"
-            className="ml-1 text-sm font-medium text-[#0D5EBA]">
+          <Link href="/register" className="ml-1 text-sm font-medium text-[#0D5EBA]">
             Create Account
           </Link>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 
