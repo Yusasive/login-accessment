@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
 const containerVariants = {
@@ -16,17 +17,52 @@ const itemVariants = {
 const RegisterPage: React.FC = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const router = useRouter();
 
-  const togglePasswordVisibility = () => {
-    setPasswordVisible((prev) => !prev);
-  };
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-  const handleLogin = (e: React.FormEvent) => {
+    setLoading(true); 
+    setError(""); 
+  
+    try {
+      const response = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to signup");
+      }
+  
+      router.push("/dashboard");
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message); 
+      } else {
+        setError("An unexpected error occurred.");
+      }
+    } finally {
+      setLoading(false); 
+    }
+
     e.preventDefault();
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
     }, 2000);
+  };
+
+  const togglePasswordVisibility = () => {
+    setPasswordVisible((prev) => !prev);
   };
 
   return (
@@ -48,7 +84,7 @@ const RegisterPage: React.FC = () => {
 
         <motion.form
           className="space-y-4"
-          onSubmit={handleLogin}
+          onSubmit={handleSignup}
           variants={itemVariants}>
           <div>
             <label className="block text-sm font-medium text-[#101928]">
@@ -57,8 +93,11 @@ const RegisterPage: React.FC = () => {
             <div className="relative">
               <input
                 type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter Email"
                 className="w-full px-4 py-2 border text-black rounded-md focus:ring focus:ring-blue-200 placeholder:text-[#98A2B3] placeholder:text-sm placeholder:font-normal"
+                required
               />
               <span className="absolute inset-y-0 right-4 flex items-center">
                 <svg
@@ -84,8 +123,11 @@ const RegisterPage: React.FC = () => {
             <div className="relative">
               <input
                 type={passwordVisible ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter Password"
                 className="w-full px-4 py-2 border text-black rounded-md focus:ring focus:ring-blue-200 placeholder:text-[#98A2B3] placeholder:text-sm placeholder:font-normal"
+                required
               />
               <span
                 className="absolute inset-y-0 right-4 flex items-center cursor-pointer"
@@ -131,9 +173,12 @@ const RegisterPage: React.FC = () => {
             </label>
             <div className="relative">
               <input
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 type={passwordVisible ? "text" : "password"}
                 placeholder="Enter Password"
                 className="w-full px-4 py-2 border text-black rounded-md focus:ring focus:ring-blue-200 placeholder:text-[#98A2B3] placeholder:text-sm placeholder:font-normal"
+                required
               />
               <span
                 className="absolute inset-y-0 right-4 flex items-center cursor-pointer"
@@ -199,6 +244,7 @@ const RegisterPage: React.FC = () => {
               "Create an account"
             )}
           </button>
+          {error && <p style={{ color: "red" }}>{error}</p>}
         </motion.form>
 
         <motion.div
