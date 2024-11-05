@@ -1,26 +1,58 @@
-
 "use client";
 import Link from "next/link";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
 const LoginPage: React.FC = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const router = useRouter();
 
-  const togglePasswordVisibility = () => {
-    setPasswordVisible((prev) => !prev);
-  };
-
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to login");
+      }
+
+      router.push("/dashboard");
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unexpected error occurred.");
+      }
+    } finally {
+      setLoading(false);
+    }
+
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
     }, 2000);
   };
 
-  // Animation Variants
+  const togglePasswordVisibility = () => {
+    setPasswordVisible((prev) => !prev);
+  };
+
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
@@ -56,10 +88,13 @@ const LoginPage: React.FC = () => {
               Email Address
             </label>
             <div className="relative">
-            <input
+              <input
                 type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter Email"
                 className="w-full px-4 py-2 border text-black rounded-md focus:ring focus:ring-blue-200 placeholder:text-[#98A2B3] placeholder:text-sm placeholder:font-normal"
+                required
               />
               <span className="absolute inset-y-0 right-4 flex items-center">
                 <svg
@@ -83,10 +118,13 @@ const LoginPage: React.FC = () => {
               Password
             </label>
             <div className="relative">
-            <input
+              <input
                 type={passwordVisible ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter Password"
                 className="w-full px-4 py-2 border text-black rounded-md focus:ring focus:ring-blue-200 placeholder:text-[#98A2B3] placeholder:text-sm placeholder:font-normal"
+                required
               />
               <span
                 className="absolute inset-y-0 right-4 flex items-center cursor-pointer"
@@ -169,6 +207,7 @@ const LoginPage: React.FC = () => {
               "Log into Account"
             )}
           </motion.button>
+          {error && <p style={{ color: "red" }}>{error}</p>}
         </form>
         <div className="flex items-center justify-between">
           <hr className="flex-grow border-gray-200 border-1" />
@@ -191,7 +230,9 @@ const LoginPage: React.FC = () => {
         </div>
         <div className="flex items-center justify-center mt-6">
           <span className="text-sm text-[#667185]">Are you new here? </span>
-          <Link href="/register" className="ml-1 text-sm font-medium text-[#0D5EBA]">
+          <Link
+            href="/register"
+            className="ml-1 text-sm font-medium text-[#0D5EBA]">
             Create Account
           </Link>
         </div>
