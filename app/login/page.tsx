@@ -17,25 +17,24 @@ const LoginPage: React.FC = () => {
     e.preventDefault();
     setLoading(true);
     setError("");
-
+  
     try {
-      const data = await loginUser(email, password); 
-
+      const data = await loginUser(email, password);
+  
       if (data.error) {
         throw new Error(data.message || "Failed to login");
       }
-
+  
       router.push("/dashboard");
     } catch (error) {
       if (error instanceof Error) {
-        setError(error.message);
+        setError(error.message); // Display error if login fails
       } else {
         setError("An unexpected error occurred.");
       }
     } finally {
       setLoading(false);
     }
-
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
