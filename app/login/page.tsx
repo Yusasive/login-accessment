@@ -3,6 +3,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { loginUser } from "../../utils/api"; 
 
 const LoginPage: React.FC = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -18,17 +19,9 @@ const LoginPage: React.FC = () => {
     setError("");
 
     try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      const data = await loginUser(email, password); 
 
-      const data = await response.json();
-
-      if (!response.ok) {
+      if (data.error) {
         throw new Error(data.message || "Failed to login");
       }
 
@@ -48,6 +41,7 @@ const LoginPage: React.FC = () => {
       setLoading(false);
     }, 2000);
   };
+
 
   const togglePasswordVisibility = () => {
     setPasswordVisible((prev) => !prev);

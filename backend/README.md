@@ -74,10 +74,7 @@ Method: POST
 Request Body:
 json
 
-`{
-  "username": "new_user",
-  "password": "new_password"
-}`
+`{ "email": "testuser@example.com", "password": "TestPassword123" }`
 
 
 Response:
@@ -86,9 +83,7 @@ Response:
 
 json
 
-`{
-  "username": "new_user"
-}`
+`{ "email": "testuser@example.com", "password": "TestPassword123" }`
 
 400 Bad Request (if the username already exists or fields are missing):
 json
@@ -103,11 +98,7 @@ URL: /api/login/
 Method: POST
 Request Body:
 json
-`
-{
-  "username": "existing_user",
-  "password": "user_password"
-}`
+`{ "email": "testuser@example.com", "password": "TestPassword123" }`
 Response:
 200 OK:
 json
