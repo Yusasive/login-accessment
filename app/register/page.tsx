@@ -35,7 +35,7 @@ const RegisterPage: React.FC = () => {
         throw new Error(data.message || "Failed to register");
       }
 
-      router.push("/dashboard"); // Redirect after successful registration
+      router.push("/dashboard"); 
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);

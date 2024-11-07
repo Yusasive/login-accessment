@@ -28,7 +28,7 @@ const LoginPage: React.FC = () => {
       router.push("/dashboard");
     } catch (error) {
       if (error instanceof Error) {
-        setError(error.message); // Display error if login fails
+        setError(error.message); 
       } else {
         setError("An unexpected error occurred.");
       }

@@ -20,8 +20,8 @@ A Django API for user registration, login, and JWT-based authentication.
 
 1. **Clone the repository:**
    ```bash
-   git clone <repository-url>
-   cd <repository-directory>
+   git https://github.com/Yusasive/login-accessment.git
+   cd login-accessment/backend
 
 2. **Set up a virtual environment:**
 
