@@ -3,6 +3,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { registerUser } from "../../utils/api"; 
 
 const containerVariants = {
   hidden: { opacity: 0, scale: 0.9 },
@@ -24,35 +25,28 @@ const RegisterPage: React.FC = () => {
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
 
-    setLoading(true); 
-    setError(""); 
-  
     try {
-      const response = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-  
-      const data = await response.json();
-  
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to signup");
+      const data = await registerUser(email, password);
+
+      if (data.error) {
+        throw new Error(data.message || "Failed to register");
       }
-  
-      router.push("/dashboard");
+
+      router.push("/dashboard"); // Redirect after successful registration
     } catch (error) {
       if (error instanceof Error) {
-        setError(error.message); 
+        setError(error.message);
       } else {
         setError("An unexpected error occurred.");
       }
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
+
+
 
     e.preventDefault();
     setLoading(true);
